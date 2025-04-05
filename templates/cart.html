@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .cart-table th, .cart-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .cart-table th {
+            background-color: #f4f4f4;
+        }
+
+        .cart-total {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .checkout-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .checkout-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Cart</h1>
+        {% if cart %}
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart.values() %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>${{ item.price }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.price * item.quantity }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="cart-total">
+            Total: ${{ total }}
+        </div>
+        <form method="POST" action="{{ url_for('checkout') }}">
+            <button type="submit" class="checkout-btn">Checkout</button>
+        </form>
+        {% else %}
+        <p>Your cart is empty.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

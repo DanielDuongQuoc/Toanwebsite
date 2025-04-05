@@ -4,6 +4,7 @@ from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from manage_sql import Product,db , Role, User, Order, initialize_database
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask import session, jsonify
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
@@ -32,6 +33,12 @@ def index():
 @app.route('/products')
 def products():
     return "<h1>Products Page</h1><p>List of products will be displayed here.</p>"
+
+@app.route('/cart')
+def cart():
+    cart = session.get('cart', {})
+    total = sum(item['price'] * item['quantity'] for item in cart.values())
+    return render_template('cart.html', cart=cart, total=total)
 
 @app.route('/account_redirect')
 def account_redirect():
@@ -221,6 +228,29 @@ def category_products(category_name):
     # Lấy danh sách sản phẩm thuộc category
     products = Product.query.filter_by(category=category_name).all()
     return render_template('category_products.html', products=products, category_name=category_name)
+
+@app.route('/add_to_cart/<int:product_id>', methods=['POST'])
+def add_to_cart(product_id):
+    product = Product.query.get_or_404(product_id)
+    cart = session.get('cart', {})
+
+    if str(product_id) in cart:
+        cart[str(product_id)]['quantity'] += 1
+    else:
+        cart[str(product_id)] = {
+            'name': product.name,
+            'price': product.price,
+            'quantity': 1
+        }
+
+    session['cart'] = cart
+    return jsonify({'message': f'{product.name} has been added to your cart!'})
+
+@app.route('/checkout', methods=['POST'])
+def checkout():
+    session.pop('cart', None)
+    flash('Thank you for your purchase!', 'success')
+    return redirect(url_for('index'))
 
 @app.route('/logout')
 @login_required

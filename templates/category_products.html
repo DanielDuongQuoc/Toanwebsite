@@ -6,40 +6,95 @@
     <title>{{ category_name }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
         .product-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 30px;
             justify-content: center;
         }
 
         .product-item {
-            width: 250px;
-            padding: 15px;
+            width: 300px;
+            padding: 20px;
             background: #fff;
             border: 1px solid #ddd;
-            border-radius: 8px;
+            border-radius: 10px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
         }
 
         .product-item img {
             width: 100%;
             height: auto;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            border-radius: 10px;
+            margin-bottom: 15px;
         }
 
         .product-item h3 {
-            font-size: 18px;
+            font-size: 22px;
+            font-weight: bold;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .product-item p {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 5px;
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .product-item p strong {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .add-to-cart {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            color: #4CAF50;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 15px;
+            border: 1px solid #4CAF50;
+            border-radius: 5px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .add-to-cart:hover {
+            background-color: #4CAF50;
+            color: #fff;
         }
     </style>
 </head>
@@ -52,11 +107,35 @@
                 <img src="{{ url_for('static', filename=product.image_url) }}" alt="{{ product.name }}">
                 <h3>{{ product.name }}</h3>
                 <p><strong>Description:</strong> {{ product.description }}</p>
-                <p><strong>Price:</strong> ${{ product.price }}</p>
+                <p>
+                    <strong>Price:</strong> ${{ product.price }}
+                    <span class="add-to-cart" onclick="addToCart('{{ product.id }}')">
+                        🛒 Add to Cart
+                    </span>
+                </p>
                 <p><strong>Category:</strong> {{ product.category }}</p>
             </div>
             {% endfor %}
         </div>
     </div>
+
+    <script>
+        function addToCart(productId) {
+            fetch(`/add_to_cart/${productId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ quantity: 1 })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
 </body>
 </html>
