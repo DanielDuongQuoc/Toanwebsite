@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUOCTOAN Bakery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #fdf6ef;
+    }
+
+    /* Top Info Bar */
+    .top-bar {
+      background-color: #532f2f;
+      color: white;
+      padding: 10px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .top-left img {
+      height: 50px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: white;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .search-box input {
+      border: none;
+      padding: 8px 12px;
+      width: 200px;
+      outline: none;
+    }
+
+    .search-box button {
+      background-color: #532f2f;
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      font-size: 14px;
+    }
+
+    .top-right i {
+      margin-right: 5px;
+    }
+
+    /* Navigation Bar */
+    nav {
+      background-color: #532f2f;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 25px;
+        padding: 12px 0;
+        position: relative;
+    }
+
+    .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        position: relative;
+    }
+
+    /* Định dạng cho dropdown */
+    .dropdown {
+        position: relative;
+    }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%; /* Hiển thị menu con ngay bên dưới */
+        left: 0;
+        background-color: #532f2f;
+        padding: 10px 0;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+
+    .dropdown-menu a {
+        display: block;
+        padding: 8px 20px;
+        color: white;
+        text-decoration: none;
+        font-weight: normal;
+    }
+
+    .dropdown-menu a:hover {
+        background-color: #6a1b9a;
+    }
+
+    /* Hiển thị menu con khi di chuột đến dropdown */
+    .dropdown:hover .dropdown-menu {
+        display: block;
+    }
+
+    .nav-links a.active::after {
+      content: "";
+      position: absolute;
+      height: 3px;
+      background: #c6dd2e;
+      bottom: -5px;
+      left: 0;
+      right: 0;
+    }
+
+    .banner {
+        background: linear-gradient(to right, #fff4d1, #fffce6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        position: relative;
+    }
+
+    .banner img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .banner-center {
+        width: 100%; /* Chiếm toàn bộ chiều rộng */
+        height: 50%;
+        object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+    }
+
+    .contact-info {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #753f00;
+      font-weight: bold;
+    }
+
+    .dots {
+      margin-top: 15px;
+      font-size: 20px;
+      color: #b4c800;
+    }
+
+    /* Section Title */
+    .section-title {
+      text-align: center;
+      font-size: 28px;
+      color: #b4c800;
+      font-weight: bold;
+      margin: 40px 0 20px;
+    }
+
+    /* Floating buttons */
+    .floating-phone,
+    .messenger-btn {
+      position: fixed;
+      bottom: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 30px;
+      z-index: 999;
+      cursor: pointer;
+    }
+
+    .floating-phone {
+      left: 20px;
+      background-color: #00aaff;
+    }
+
+    .messenger-btn {
+      right: 20px;
+      background-color: #6a1b9a;
+    }
+
+    
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="top-left">
+      <img src="/static/uploads/logo.png" alt="Logo">
+      <div class="search-box">
+        <form method="GET" action="{{ url_for('search_products') }}" class="search-form">
+            <input type="text" name="name" placeholder="Search by name">
+            <input type="number" name="min_price" placeholder="Min price" step="0.01">
+            <input type="number" name="max_price" placeholder="Max price" step="0.01">
+            <select name="category">
+                <option value="">All Categories</option>
+                <option value="BIRTHDAY CAKE">BIRTHDAY CAKE</option>
+                <option value="BREAD & SAVORY CAKE">BREAD & SAVORY CAKE</option>
+                <option value="COOKIE & MINICAKE">COOKIE & MINICAKE</option>
+                <option value="OTHER">OTHER</option>
+            </select>
+            <button type="submit">🔍 Search</button>
+        </form>
+    </div>
+    </div>
+    <div class="top-right">
+      <div>📞 0966 319 504</div>
+      <div>☎️ Store <strong></strong> system</div>
+      <div>👤 <a href="{{ url_for('account_redirect') }}" style="color: white; text-decoration: none;">Account</a></div>
+      <div>🛒 0</div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-links">
+        <a href="{{ url_for('index') }}" class="active">HOME</a>
+        <div class="dropdown">
+          <a href="{{ url_for('category_products', category_name='BIRTHDAY CAKE') }}">BIRTHDAY CAKE</a>
+          <div class="dropdown-menu">
+              <a href="{{ url_for('category_products', category_name='BIRTHDAY CAKE') }}">BIRTHDAY CAKES</a>
+              <a href="{{ url_for('category_products', category_name='MOUSSE') }}">MOUSSE</a>
+          </div>
+      </div>
+        <div class="dropdown">
+          <a href="{{ url_for('category_products', category_name='BREAD & SAVORY CAKE') }}">BREAD & SAVORY CAKE</a>
+          <div class="dropdown-menu">
+              <a href="{{ url_for('category_products', category_name='BREAD') }}">BREAD</a>
+              <a href="{{ url_for('category_products', category_name='SAVORY CAKE') }}">SAVORY CAKE</a>
+          </div>
+      </div>
+      <div class="dropdown">
+        <a href="{{ url_for('category_products', category_name='COOKIE & MINICAKE') }}">COOKIE & MINICAKE</a>
+        <div class="dropdown-menu">
+            <a href="{{ url_for('category_products', category_name='COOKIE') }}">COOKIE</a>
+            <a href="{{ url_for('category_products', category_name='MINICAKE') }}">MINICAKE</a>
+        </div>
+    </div>
+        {% if current_user.is_authenticated and current_user.role.name == 'Admin' %}
+        <a href="{{ url_for('manage') }}">MANAGE</a>
+        {% endif %}
+    </div>
+</nav>
+
+  <!-- Banner -->
+<div class="banner">
+    
+    <!-- Thay thế banner text bằng hình ảnh banner center -->
+    <img src="{{ url_for('static', filename='uploads/banner1.png') }}" alt="Banner Center" class="banner-center">
+   
+</div>
+
+  <!-- Section -->
+  <div class="section-title">BIRTHDAY CAKES</div>
+
+  <!-- Floating Buttons -->
+  <div class="floating-phone">📞</div>
+  <div class="messenger-btn">💬</div>
+
+</body>
+</html>

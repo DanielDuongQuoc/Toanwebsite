@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Search Results</h1>
+        <div class="product-list">
+            {% if products %}
+                {% for product in products %}
+                <div class="product-item">
+                    <img src="{{ url_for('static', filename=product.image_url) }}" alt="{{ product.name }}">
+                    <h3>{{ product.name }}</h3>
+                    <p><strong>Description:</strong> {{ product.description }}</p>
+                    <p><strong>Price:</strong> ${{ product.price }}</p>
+                    <p><strong>Category:</strong> {{ product.category }}</p>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No products found matching your criteria.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
